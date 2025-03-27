@@ -12,7 +12,7 @@ if st.button("Send"):
         with st.spinner("Thinking..."):
             try:
                 # Replace this URL with your ngrok URL from Google Colab
-                backend_url = "https://abc12345.ngrok.io/ask"
+                backend_url = "https://8339-34-148-213-81.ngrok-free.app/ask"
                 res = requests.post(backend_url, json={"question": user_question})
                 data = res.json()
                 st.success(data.get("answer", "No answer received."))
