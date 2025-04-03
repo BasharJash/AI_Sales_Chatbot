@@ -4,7 +4,7 @@ import pyttsx3
 
 # ---- CONFIG ----
 st.set_page_config(page_title="AI Sales Chatbot", page_icon="🛍️")
-backend_url = "https://ea45-34-90-213-16.ngrok-free.app/ask"  # ✅ Replace with actual
+backend_url = "https://613c-34-143-231-179.ngrok-free.app/ask"  # ✅ Replace with actual
 
 st.title("🛍️ AI Sales Assistant")
 
