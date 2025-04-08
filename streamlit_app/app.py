@@ -1,40 +1,42 @@
 import streamlit as st
 import requests
 
+# ---- CONFIG ----
 st.set_page_config(page_title="AI Sales Chatbot", page_icon="🍭")
-backend_base = "https://321f-34-124-252-237.ngrok-free.app"
+backend_base = "https://cfeb-34-124-252-237.ngrok-free.app"  # Replace with your actual ngrok URL
 backend_url = backend_base + "/ask"
+clear_url = backend_base + "/clear"
 
-USERNAME = "user123"  # You can make this dynamic via login or input
+USERNAME = "user123"  # You can make this dynamic later
 
 st.title("🛍️ AI Sales Assistant")
 
-# SESSION STATE
+# ---- SESSION STATE ----
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 if "user_input" not in st.session_state:
     st.session_state.user_input = ""
 
-# CLEAR BUTTON
+# ---- CLEAR BUTTON ----
 if st.button("🔁 Clear Conversation"):
     st.session_state.chat_history = []
-    st.session_state.input = ""
+    st.session_state.user_input = ""
     try:
-        requests.post(backend_base + "/clear", json={"username": USERNAME})
+        requests.post(clear_url, json={"username": USERNAME})
     except:
-        st.warning("Failed to clear on server.")
-    st.success("Conversation cleared!")
+        st.warning("⚠️ Failed to clear memory on server.")
+    st.success("✅ Conversation cleared!")
     st.rerun()
 
-# DISPLAY CHAT
+# ---- DISPLAY CHAT ----
 st.subheader("🗣️ Conversation")
 for speaker, message in st.session_state.chat_history:
     st.markdown(f"**{speaker}:** {message}")
 st.divider()
 
-# USER INPUT FORM
+# ---- USER INPUT FORM ----
 with st.form("user_input_form", clear_on_submit=True):
-    user_question = st.text_input("Ask a product-related question:", value=st.session_state.user_input, key="input")
+    user_question = st.text_input("Ask a product-related question:", key="user_input")
     submitted = st.form_submit_button("📤 Ask")
 
     if submitted and user_question.strip():
@@ -45,10 +47,9 @@ with st.form("user_input_form", clear_on_submit=True):
 
                 st.session_state.chat_history.append(("🧑 You", user_question))
                 st.session_state.chat_history.append(("🤖 AI", answer))
-                st.session_state.user_input = ""
                 st.rerun()
 
             except Exception as e:
-                st.error(f"\u274c Error: {e}")
+                st.error(f"❌ Error: {e}")
     elif submitted:
-        st.warning("Please enter a question.")
+        st.warning("⚠️ Please enter a question.")
