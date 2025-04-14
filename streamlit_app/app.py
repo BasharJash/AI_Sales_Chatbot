@@ -3,7 +3,7 @@ import requests
 
 # ---- CONFIG ----
 st.set_page_config(page_title="AI Sales Chatbot", page_icon="🍭")
-backend_base = "https://cfeb-34-124-252-237.ngrok-free.app"  # Replace with your actual ngrok URL
+backend_base = "https://08f4-34-29-135-238.ngrok-free.app"  # Replace with your actual ngrok URL
 backend_url = backend_base + "/ask"
 clear_url = backend_base + "/clear"
 
@@ -47,9 +47,12 @@ with st.form("user_input_form", clear_on_submit=True):
 
                 st.session_state.chat_history.append(("🧑 You", user_question))
                 st.session_state.chat_history.append(("🤖 AI", answer))
-                st.rerun()
+                st.rerun()  # ✅ reruns the app cleanly
 
             except Exception as e:
                 st.error(f"❌ Error: {e}")
+    elif submitted:
+        st.warning("⚠️ Please enter a question.")
+
     elif submitted:
         st.warning("⚠️ Please enter a question.")
