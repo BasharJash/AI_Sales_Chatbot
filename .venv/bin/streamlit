@@ -1,4 +1,4 @@
-#!/Users/basharaljashmi/Documents/GitHub/AI_Sales_Chatbot/.venv/bin/python3.11
+#!/Users/basharaljashmi/AI_Sales_Chatbot-1/.venv/bin/python3.11
 # -*- coding: utf-8 -*-
 import re
 import sys
