@@ -7,7 +7,7 @@ from voice import record_voice  # Make sure voice.py is in the same directory
 
 # ---- CONFIG ----
 st.set_page_config(page_title="Gymshark AI Assistant", layout="wide")
-backend_base = "https://ccd5-195-26-232-152.ngrok-free.app"  # Replace with your actual backend URL
+backend_base = "https://d6ce-213-173-110-155.ngrok-free.app"  # Replace with your actual backend URL
 backend_url = backend_base + "/ask"
 clear_url = backend_base + "/clear"
 
