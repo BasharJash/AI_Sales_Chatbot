@@ -13,7 +13,7 @@ clear_url = backend_base + "/clear"
 
 # ---- HEADER SECTION WITH LOGOS ----
 gymshark_logo_path = os.path.join(os.path.dirname(__file__), "gymshark_logo.png")
-umn_logo_path = os.path.join(os.path.dirname(__file__), "umn_logo.png")
+umn_logo_path = os.path.join(os.path.dirname(__file__), "UMN_LOGO.png")
 
 col1, col2, col3 = st.columns([1, 6, 1])
 
