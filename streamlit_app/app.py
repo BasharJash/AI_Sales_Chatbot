@@ -7,26 +7,44 @@ from voice import record_voice  # Make sure voice.py is in the same directory
 
 # ---- CONFIG ----
 st.set_page_config(page_title="Gymshark AI Assistant", layout="wide")
-backend_base = "https://2251-213-173-110-155.ngrok-free.app"  # Replace with your actual backend URL
+backend_base = "https://6ff0-213-173-110-155.ngrok-free.app"  # Use your correct backend
 backend_url = backend_base + "/ask"
 clear_url = backend_base + "/clear"
 
-# ---- LOGO SECTION ----
-logo_path = os.path.join(os.path.dirname(__file__), "gymshark_logo.png")
-if os.path.exists(logo_path):
-    logo_data = base64.b64encode(open(logo_path, "rb").read()).decode()
-    st.markdown(
-        f"""
-        <div style='text-align: center;'>
-            <img src="data:image/png;base64,{logo_data}" width="500" />
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+# ---- HEADER SECTION WITH LOGOS ----
+gymshark_logo_path = os.path.join(os.path.dirname(__file__), "gymshark_logo.png")
+umn_logo_path = os.path.join(os.path.dirname(__file__), "umn_logo.png")
 
-st.markdown("""
-<h1 style='text-align: center; font-size: 36px;'>🤼️‍♂️ Gymshark AI Assistant</h1>
-""", unsafe_allow_html=True)
+col1, col2, col3 = st.columns([1, 6, 1])
+
+with col1:
+    if os.path.exists(gymshark_logo_path):
+        gymshark_logo_data = base64.b64encode(open(gymshark_logo_path, "rb").read()).decode()
+        st.markdown(
+            f"""
+            <div style='text-align: right;'>
+                <img src="data:image/png;base64,{gymshark_logo_data}" width="350" />
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+with col2:
+    st.markdown("""
+    <h1 style='text-align: center; font-size: 36px;'>🤼️‍♂️ Gymshark AI Assistant</h1>
+    """, unsafe_allow_html=True)
+
+with col3:
+    if os.path.exists(umn_logo_path):
+        umn_logo_data = base64.b64encode(open(umn_logo_path, "rb").read()).decode()
+        st.markdown(
+            f"""
+            <div style='text-align: left;'>
+                <img src="data:image/png;base64,{umn_logo_data}" width="120" />
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
 # ---- SESSION STATE ----
 if "chat_history" not in st.session_state:
@@ -40,20 +58,44 @@ if "last_voice_input" not in st.session_state:
 st.subheader("🕡️ Conversation")
 chat_container = st.container()
 with chat_container:
-    for speaker, message in st.session_state.chat_history:
+    for idx, (speaker, message) in enumerate(st.session_state.chat_history):
         st.markdown(f"**{speaker}:**", unsafe_allow_html=True)
         st.markdown(f"<div style='font-size: 18px; margin-bottom: 0.5rem;'>{message}</div>", unsafe_allow_html=True)
 
-        # Inject text-to-speech for the most recent AI message
-        if speaker == "🧫 AI" and message == st.session_state.chat_history[-1][1]:
+        # Only add Read/Stop button for the latest AI response
+        if speaker == "🧫 AI" and idx == len(st.session_state.chat_history) - 1:
+            safe_message = message.replace('"', '\\"').replace("\n", " ")
             components.html(
                 f"""
-                <button onclick="const utterance = new SpeechSynthesisUtterance(`{message}`); window.speechSynthesis.speak(utterance);"
-                        style="margin-top:5px;padding:8px 14px;font-size:14px;border:none;border-radius:8px;background:#444;color:white;cursor:pointer;">
+                <script>
+                    var synth = window.speechSynthesis;
+                    var reading = false;
+                    var utterance = new SpeechSynthesisUtterance("{safe_message}");
+
+                    function toggleSpeech() {{
+                        if (!reading) {{
+                            synth.speak(utterance);
+                            document.getElementById("readButton").innerText = "⏹️ Stop Reading";
+                            reading = true;
+                        }} else {{
+                            synth.cancel();
+                            document.getElementById("readButton").innerText = "🔊 Read Aloud";
+                            reading = false;
+                        }}
+                    }}
+
+                    utterance.onend = function() {{
+                        document.getElementById("readButton").innerText = "🔊 Read Aloud";
+                        reading = false;
+                    }};
+                </script>
+
+                <button id="readButton" onclick="toggleSpeech()"
+                        style="margin-top:8px;padding:8px 16px;font-size:14px;border:none;border-radius:8px;background:#444;color:white;cursor:pointer;">
                     🔊 Read Aloud
                 </button>
                 """,
-                height=50
+                height=150
             )
     st.divider()
 
